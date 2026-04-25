@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Conda environment
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: environment.yml
+          activate-environment: fastapi
+          auto-activate-base: false
+
+      - name: Install linting tool
+        run: pip install flake8
+
+      - name: Run flake8
+        run: flake8 .
+
+      - name: Run tests
+        run: pytest -v
